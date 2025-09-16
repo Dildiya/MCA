@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Spinner App</string>
+    <!-- This is the string array that will be used to populate the Spinner. -->
+    <string-array name="languages_array">
+        52<item>Java</item>
+        <item>Python</item>
+        <item>C++</item>
+        <item>Kotlin</item>
+        <item>Swift</item>
+        <item>JavaScript</item>
+        <item>Dart</item>
+    </string-array>
+</resources>
