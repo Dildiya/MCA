@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>My Bookings – Lab Equipment Booking System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary: #2980b9;
+    --accent: #4facfe;
+    --muted: #7f8c8d;
+    --card-bg: #ffffff;
+    --success: #27ae60;
+    --danger: #e74c3c;
+    --warning: #f1c40f;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(135deg,#6dd5fa 0%, #2980b9 100%);
+  }
+
+  .container{
+    width:92%;
+    max-width:980px;
+    background:var(--card-bg);
+    border-radius:18px;
+    padding:34px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.12);
+    animation:fadeIn .5s ease;
+  }
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  h2{
+    margin:0 0 22px 0;
+    text-align:center;
+    color:#243b4a;
+    font-size:1.9rem;
+    font-weight:700;
+  }
+
+  /* table */
+  .table-wrap{overflow-x:auto}
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:18px;
+    table-layout:auto;
+  }
+  thead th{
+    text-align:center;
+    padding:14px 12px;
+    background:var(--primary);
+    color:#fff;
+    font-weight:700;
+    font-size:.95rem;
+    letter-spacing:.6px;
+  }
+  tbody td{
+    padding:14px 12px;
+    text-align:center;
+    color:#222;
+    border-bottom:1px solid #eef3f7;
+  }
+  tbody tr:nth-child(even){background:#fbfdff}
+  tbody tr:hover{background:#f1f9ff}
+
+  /* status badge */
+  .badge {
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:14px;
+    font-size:.85rem;
+    font-weight:600;
+    color:#fff;
+  }
+  .badge.success{background:var(--success);}
+  .badge.danger{background:var(--danger);}
+  .badge.warning{background:var(--warning); color:#222;}
+
+  /* actions */
+  .actions a{
+    color:var(--primary);
+    text-decoration:none;
+    font-weight:600;
+    margin:0 6px;
+  }
+  .actions a:hover{color:#123d5b}
+
+  /* empty message */
+  .empty{
+    text-align:center;
+    color:var(--muted);
+    font-weight:600;
+    padding:26px 0;
+  }
+
+  .back {
+    display:inline-block;
+    margin-top:8px;
+    color:var(--primary);
+    text-decoration:none;
+    font-weight:600;
+  }
+  .back:hover{color:#123d5b}
+
+  /* responsive tweaks */
+  @media (max-width:560px){
+    thead th{font-size:.85rem}
+    tbody td{font-size:.92rem;padding:10px}
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>📜 My Bookings</h2>
+
+    <div class="table-wrap">
+      {% if bookings and bookings|length > 0 %}
+      <table>
+        <thead>
+          <tr>
+            <th>Equipment</th>
+            <th>Date</th>
+            <th>Time Slot</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in bookings %}
+          <tr>
+            <td>{{ booking.equipment }}</td>
+
+            <!-- Robust date display -->
+            <td>
+              {% if booking.date %}
+                {{ booking.date }}
+              {% elif booking.booking_date %}
+                {{ booking.booking_date }}
+              {% elif booking.bookingDate %}
+                {{ booking.bookingDate }}
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+
+            <td>{{ booking.time_slot }}</td>
+
+            <!-- Status badge -->
+            <td>
+              {% if booking.status == "Approved" %}
+                <span class="badge success">Approved</span>
+              {% elif booking.status == "Rejected" %}
+                <span class="badge danger">Rejected</span>
+              {% else %}
+                <span class="badge warning">Pending</span>
+              {% endif %}
+            </td>
+
+            <td class="actions">
+              <a href="{{ url_for('update_booking', booking_id=booking.id) }}">Update</a> |
+              <a href="{{ url_for('cancel_booking', booking_id=booking.id) }}">Cancel</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <div class="empty">You don't have any bookings yet.</div>
+      {% endif %}
+    </div>
+
+    <a class="back" href="{{ url_for('dashboard') }}">⟵ Back to Dashboard</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Equipment - Lab Booking System</title>
+<style>
+    body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .booking-container {
+        background: #fff;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-width: 450px;
+        width: 90%;
+        text-align: center;
+        animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+        from {opacity:0; transform: translateY(-20px);}
+        to {opacity:1; transform: translateY(0);}
+    }
+
+    h1 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #555;
+        text-align: left;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    select, input[type="date"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        width: 100%;
+        transition: border-color 0.3s;
+    }
+
+    select:focus, input[type="date"]:focus {
+        border-color: #4facfe;
+    }
+
+    button {
+        background: #4facfe;
+        color: #fff;
+        border: none;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+        width: 100%;
+    }
+
+    button:hover {
+        background: #00c6ff;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        color: #4facfe;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+    .back-link:hover {
+        color: #00c6ff;
+    }
+
+    /* ---- Flash message styles ---- */
+    .flash-message {
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        text-align: center;
+        opacity: 1;
+        transition: opacity 1s ease-out;
+    }
+
+    .flash-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .flash-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+</style>
+</head>
+<body>
+    <div class="booking-container">
+        <h1>📅 Book Equipment</h1>
+
+        <!-- Display flash messages -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% set message = messages[-1] %}  <!-- show only latest -->
+                <div id="flash" class="flash-message {% if '❌' in message %}flash-error{% else %}flash-success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div>
+                <label>Select Equipment:</label>
+                <select name="equipment" required>
+                    <option value="Microscope">Microscope</option>
+                    <option value="Centrifuge">Centrifuge</option>
+                    <option value="Spectrometer">Spectrometer</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Select Date:</label>
+                <input type="date" name="date" required>
+            </div>
+
+            <div>
+                <label>Select Time Slot:</label>
+                <select name="time_slot" required>
+                    <option value="9AM-11AM">9AM-11AM</option>
+                    <option value="11AM-1PM">11AM-1PM</option>
+                    <option value="2PM-4PM">2PM-4PM</option>
+                </select>
+            </div>
+
+            <button type="submit">Book</button>
+        </form>
+
+        <a class="back-link" href="{{ url_for('dashboard') }}">⬅ Back to Dashboard</a>
+    </div>
+
+    <!-- Fade out flash message after 3 seconds -->
+    <script>
+        window.onload = function() {
+            const flash = document.getElementById('flash');
+            if(flash) {
+                setTimeout(() => { flash.style.opacity = '0'; }, 3000);
+            }
+        };
+    </script>
+</body>
+</html>
